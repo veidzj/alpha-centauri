@@ -11,6 +11,7 @@
     "eslint-plugin-jest": "^27.9.0",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
+    "git-commit-msg-linter": "^5.0.8",
     "typescript": "^5.4.5"
   }
 }
