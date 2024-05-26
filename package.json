@@ -2,6 +2,7 @@
   "name": "alpha-centauri",
   "version": "0.0.0",
   "scripts": {
+    "check": "ncu --interactive --format group -x *eslint*",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -15,6 +16,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "git-commit-msg-linter": "^5.0.8",
     "lint-staged": "^15.2.5",
+    "npm-check-updates": "^16.14.20",
     "typescript": "^5.4.5"
   }
 }
