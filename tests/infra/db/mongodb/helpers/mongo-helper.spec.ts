@@ -33,4 +33,12 @@ describe('MongoHelper', () => {
     await mongoHelper.disconnect()
     expect(mongoHelper.getClient()).toBeNull()
   })
+
+  it('Should reconnect to the database after disconnect', async() => {
+    const mongoHelper = MongoHelper.getInstance()
+    await mongoHelper.connect(process.env.MONGO_URL ?? '')
+    await mongoHelper.disconnect()
+    await mongoHelper.connect(process.env.MONGO_URL ?? '')
+    expect(mongoHelper.getClient()).toBeTruthy()
+  })
 })
