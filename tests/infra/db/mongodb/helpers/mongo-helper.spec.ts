@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import { Collection, ObjectId } from 'mongodb'
 
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
@@ -47,14 +48,14 @@ describe('MongoHelper', () => {
   it('Should get a collection when connected', async() => {
     const mongoHelper = MongoHelper.getInstance()
     await mongoHelper.connect(process.env.MONGO_URL ?? '')
-    const collection = mongoHelper.getCollection('test-collection')
+    const collection = mongoHelper.getCollection(faker.word.words())
     expect(collection).toBeInstanceOf(Collection)
   })
 
   it('Should throw when trying to get a collection without an active connection', () => {
     const mongoHelper = MongoHelper.getInstance()
     expect(() => {
-      mongoHelper.getCollection('test-collection')
+      mongoHelper.getCollection(faker.word.words())
     }).toThrow('No active connection to the database')
   })
 
@@ -71,13 +72,13 @@ describe('MongoHelper', () => {
     const mongoHelper = MongoHelper.getInstance()
     const mongoDoc = {
       _id: new ObjectId(),
-      name: 'Test',
-      age: 30
+      username: faker.internet.userName(),
+      email: faker.internet.email()
     }
     const mappedDocument = mongoHelper.mapDocument(mongoDoc)
     expect(mappedDocument).toEqual({
-      name: 'Test',
-      age: 30,
+      username: mongoDoc.username,
+      email: mongoDoc.email,
       id: mongoDoc._id.toHexString()
     })
   })
