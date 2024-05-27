@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb'
+import { MongoClient, type Collection } from 'mongodb'
 
 export class MongoHelper {
   private static instance: MongoHelper
@@ -12,6 +12,10 @@ export class MongoHelper {
     return MongoHelper.instance
   }
 
+  public getClient(): MongoClient | null {
+    return this.client
+  }
+
   public async connect(uri: string): Promise<void> {
     this.client = await MongoClient.connect(uri)
   }
@@ -23,7 +27,10 @@ export class MongoHelper {
     }
   }
 
-  public getClient(): MongoClient | null {
-    return this.client
+  public getCollection(name: string): Collection {
+    if (!this.client) {
+      throw new Error('No active connection to the database')
+    }
+    return this.client.db().collection(name)
   }
 }
