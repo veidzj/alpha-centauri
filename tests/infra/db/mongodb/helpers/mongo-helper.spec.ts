@@ -66,4 +66,19 @@ describe('MongoHelper', () => {
     const idString = mongoHelper.mapId(mongoDoc)
     expect(idString).toBe(mongoDoc._id.toString())
   })
+
+  it('Should map the document fields and add id property', () => {
+    const mongoHelper = MongoHelper.getInstance()
+    const mongoDoc = {
+      _id: new ObjectId(),
+      name: 'Test',
+      age: 30
+    }
+    const mappedDocument = mongoHelper.mapDocument(mongoDoc)
+    expect(mappedDocument).toEqual({
+      name: 'Test',
+      age: 30,
+      id: mongoDoc._id.toHexString()
+    })
+  })
 })
