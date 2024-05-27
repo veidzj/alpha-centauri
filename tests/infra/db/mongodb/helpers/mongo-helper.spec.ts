@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { Collection, ObjectId } from 'mongodb'
 
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
+import { env } from '@/main/config'
 
 describe('MongoHelper', () => {
   let mongoHelper: MongoHelper
@@ -21,12 +22,12 @@ describe('MongoHelper', () => {
   })
 
   it('Should connect to the database', async() => {
-    await mongoHelper.connect(process.env.MONGO_URL ?? '')
+    await mongoHelper.connect(env.mongoUrl)
     expect(mongoHelper.getClient()).toBeTruthy()
   })
 
   it('Should disconnect from the database', async() => {
-    await mongoHelper.connect(process.env.MONGO_URL ?? '')
+    await mongoHelper.connect(env.mongoUrl)
     await mongoHelper.disconnect()
     expect(mongoHelper.getClient()).toBeNull()
   })
@@ -39,15 +40,15 @@ describe('MongoHelper', () => {
 
   it('Should reconnect to the database after disconnect', async() => {
     const mongoHelper = MongoHelper.getInstance()
-    await mongoHelper.connect(process.env.MONGO_URL ?? '')
+    await mongoHelper.connect(env.mongoUrl)
     await mongoHelper.disconnect()
-    await mongoHelper.connect(process.env.MONGO_URL ?? '')
+    await mongoHelper.connect(env.mongoUrl)
     expect(mongoHelper.getClient()).toBeTruthy()
   })
 
   it('Should get a collection when connected', async() => {
     const mongoHelper = MongoHelper.getInstance()
-    await mongoHelper.connect(process.env.MONGO_URL ?? '')
+    await mongoHelper.connect(env.mongoUrl)
     const collection = mongoHelper.getCollection(faker.word.words())
     expect(collection).toBeInstanceOf(Collection)
   })
