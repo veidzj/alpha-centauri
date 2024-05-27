@@ -1,4 +1,4 @@
-import { MongoClient, type Collection, type ObjectId } from 'mongodb'
+import { MongoClient, type WithId, type Collection, type ObjectId } from 'mongodb'
 
 interface DocumentWithId {
   _id: ObjectId
@@ -40,5 +40,11 @@ export class MongoHelper {
 
   public mapId<T extends DocumentWithId>(mongoDoc: T): string {
     return mongoDoc._id.toString()
+  }
+
+  public mapDocument<T>(mongoDoc: WithId<T>): T {
+    const { _id, ...rest } = mongoDoc
+    const mappedDocument = { ...rest, id: _id.toHexString() }
+    return mappedDocument as T
   }
 }
