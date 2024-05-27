@@ -25,4 +25,12 @@ describe('MongoHelper', () => {
       expect(mongoHelper.getClient()).toBeTruthy()
     })
   })
+
+  describe('disconnect', () => {
+    it('Should disconnect from the database', async() => {
+      await mongoHelper.connect(process.env.MONGO_URL ?? '')
+      await mongoHelper.disconnect()
+      expect(mongoHelper.getClient()).toBeNull()
+    })
+  })
 })
