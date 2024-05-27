@@ -1,8 +1,8 @@
-import { type MongoClient } from 'mongodb'
+import { MongoClient } from 'mongodb'
 
 export class MongoHelper {
   private static instance: MongoHelper
-  private readonly client: MongoClient | null = null
+  private client: MongoClient | null = null
 
   public static getInstance(): MongoHelper {
     if (!MongoHelper.instance) {
@@ -10,5 +10,9 @@ export class MongoHelper {
     }
 
     return MongoHelper.instance
+  }
+
+  public async connect(uri: string): Promise<void> {
+    this.client = await MongoClient.connect(uri)
   }
 }
