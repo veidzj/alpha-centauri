@@ -1,4 +1,8 @@
-import { MongoClient, type Collection } from 'mongodb'
+import { MongoClient, type Collection, type ObjectId } from 'mongodb'
+
+interface DocumentWithId {
+  _id: ObjectId
+}
 
 export class MongoHelper {
   private static instance: MongoHelper
@@ -32,5 +36,9 @@ export class MongoHelper {
       throw new Error('No active connection to the database')
     }
     return this.client.db().collection(name)
+  }
+
+  public mapId<T extends DocumentWithId>(mongoDoc: T): string {
+    return mongoDoc._id.toString()
   }
 }
