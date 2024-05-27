@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 
@@ -56,5 +56,14 @@ describe('MongoHelper', () => {
     expect(() => {
       mongoHelper.getCollection('test-collection')
     }).toThrow('No active connection to the database')
+  })
+
+  it('Should map the document id to a string', () => {
+    const mongoHelper = MongoHelper.getInstance()
+    const mongoDoc = {
+      _id: new ObjectId()
+    }
+    const idString = mongoHelper.mapId(mongoDoc)
+    expect(idString).toBe(mongoDoc._id.toString())
   })
 })
