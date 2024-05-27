@@ -1,5 +1,6 @@
-import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb'
+
+import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 
 describe('MongoHelper', () => {
   let mongoHelper: MongoHelper
@@ -48,5 +49,12 @@ describe('MongoHelper', () => {
     await mongoHelper.connect(process.env.MONGO_URL ?? '')
     const collection = mongoHelper.getCollection('test-collection')
     expect(collection).toBeInstanceOf(Collection)
+  })
+
+  it('Should throw when trying to get a collection without an active connection', () => {
+    const mongoHelper = MongoHelper.getInstance()
+    expect(() => {
+      mongoHelper.getCollection('test-collection')
+    }).toThrow('No active connection to the database')
   })
 })
