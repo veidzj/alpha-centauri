@@ -1,4 +1,5 @@
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
+import { Collection } from 'mongodb'
 
 describe('MongoHelper', () => {
   let mongoHelper: MongoHelper
@@ -40,5 +41,12 @@ describe('MongoHelper', () => {
     await mongoHelper.disconnect()
     await mongoHelper.connect(process.env.MONGO_URL ?? '')
     expect(mongoHelper.getClient()).toBeTruthy()
+  })
+
+  it('Should get a collection when connected', async() => {
+    const mongoHelper = MongoHelper.getInstance()
+    await mongoHelper.connect(process.env.MONGO_URL ?? '')
+    const collection = mongoHelper.getCollection('test-collection')
+    expect(collection).toBeInstanceOf(Collection)
   })
 })
