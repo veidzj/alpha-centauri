@@ -15,4 +15,15 @@ export class MongoHelper {
   public async connect(uri: string): Promise<void> {
     this.client = await MongoClient.connect(uri)
   }
+
+  public async disconnect(): Promise<void> {
+    if (this.client) {
+      await this.client.close()
+      this.client = null
+    }
+  }
+
+  public getClient(): MongoClient | null {
+    return this.client
+  }
 }
