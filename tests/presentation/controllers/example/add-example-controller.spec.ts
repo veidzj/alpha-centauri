@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 
 import { AddExampleSpy } from '@/tests/domain/mocks/example'
 import { AddExampleController } from '@/presentation/controllers/example'
-import { created } from '@/presentation/helpers'
+import { created, serverError } from '@/presentation/helpers'
 
 const mockRequest = (): AddExampleController.Request => ({
   name: faker.person.fullName()
@@ -22,5 +22,13 @@ describe('AddExampleController', () => {
     const sut = new AddExampleController(addExampleSpy)
     const response = await sut.handle(mockRequest())
     expect(response).toEqual(created({ exampleId: addExampleSpy.output }))
+  })
+
+  test('Should return status 500 if AddExample throws', async() => {
+    const addExampleSpy = new AddExampleSpy()
+    const sut = new AddExampleController(addExampleSpy)
+    jest.spyOn(addExampleSpy, 'add').mockRejectedValueOnce(new Error())
+    const response = await sut.handle(mockRequest())
+    expect(response).toEqual(serverError())
   })
 })
