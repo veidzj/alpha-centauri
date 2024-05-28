@@ -1,5 +1,5 @@
 import { AddExampleRepositorySpy } from '@/tests/application/mocks/example'
-import { addExampleInput } from '@/tests/domain/mocks/example'
+import { mockAddExampleInput } from '@/tests/domain/mocks/example'
 import { DbAddExample } from '@/application/usecases/example'
 
 interface Sut {
@@ -19,21 +19,21 @@ const makeSut = (): Sut => {
 describe('DbAddExample', () => {
   test('Should call AddExampleRepository with correct values', async() => {
     const { sut, addExampleRepositorySpy } = makeSut()
-    const exampleInput = addExampleInput()
-    await sut.add(exampleInput)
-    expect(addExampleRepositorySpy.input).toEqual(exampleInput)
+    const addExampleInput = mockAddExampleInput()
+    await sut.add(addExampleInput)
+    expect(addExampleRepositorySpy.input).toEqual(addExampleInput)
   })
 
   test('Should return example id on success', async() => {
     const { sut, addExampleRepositorySpy } = makeSut()
-    const exampleId = await sut.add(addExampleInput())
+    const exampleId = await sut.add(mockAddExampleInput())
     expect(exampleId).toBe(addExampleRepositorySpy.output)
   })
 
   test('Should throw if AddExampleRepository throws', async() => {
     const { sut, addExampleRepositorySpy } = makeSut()
     jest.spyOn(addExampleRepositorySpy, 'add').mockRejectedValueOnce(new Error())
-    const promise = sut.add(addExampleInput())
+    const promise = sut.add(mockAddExampleInput())
     await expect(promise).rejects.toThrow()
   })
 })
