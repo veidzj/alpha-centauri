@@ -5,7 +5,7 @@ export class DbAddExample implements AddExample {
   constructor(private readonly addExampleRepository: AddExampleRepository) {}
 
   public async add(input: AddExample.Input): Promise<string> {
-    await this.addExampleRepository.add(input)
-    return ''
+    const exampleId = await this.addExampleRepository.add(input)
+    return exampleId
   }
 }
