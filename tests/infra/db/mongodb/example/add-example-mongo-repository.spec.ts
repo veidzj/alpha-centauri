@@ -1,8 +1,8 @@
 import { Collection, ObjectId } from 'mongodb'
 
 import { connectToDatabase, disconnectFromDatabase, clearCollection, getCollection } from '@/tests/infra/db/mongodb/mongo-test-setup'
-import { AddExampleMongoRepository } from '@/infra/db/mongodb/example'
 import { mockAddExampleRepositoryInput } from '@/tests/application/mocks/example'
+import { AddExampleMongoRepository } from '@/infra/db/mongodb/example'
 
 let exampleCollection: Collection
 
