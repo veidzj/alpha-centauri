@@ -6,8 +6,8 @@ export class AddExampleController implements Controller {
   constructor(private readonly addExample: AddExample) {}
 
   public async handle(request: AddExampleController.Request): Promise<HttpResponse> {
-    await this.addExample.add(request)
-    return created({})
+    const exampleId = await this.addExample.add(request)
+    return created({ exampleId })
   }
 }
 
