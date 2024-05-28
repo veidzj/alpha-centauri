@@ -11,3 +11,7 @@ export class AddExampleRepositorySpy implements AddExampleRepository {
     return this.output
   }
 }
+
+export const mockAddExampleRepositoryInput = (): AddExampleRepository.Input => ({
+  name: faker.person.fullName()
+})
