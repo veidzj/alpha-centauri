@@ -26,8 +26,14 @@ describe('DbAddExample', () => {
 
   test('Should return example id on success', async() => {
     const { sut, addExampleRepositorySpy } = makeSut()
-    const exampleInput = addExampleInput()
-    const exampleId = await sut.add(exampleInput)
+    const exampleId = await sut.add(addExampleInput())
     expect(exampleId).toBe(addExampleRepositorySpy.output)
+  })
+
+  test('Should throw if AddExampleRepository throws', async() => {
+    const { sut, addExampleRepositorySpy } = makeSut()
+    jest.spyOn(addExampleRepositorySpy, 'add').mockRejectedValueOnce(new Error())
+    const promise = sut.add(addExampleInput())
+    await expect(promise).rejects.toThrow()
   })
 })
