@@ -23,4 +23,11 @@ describe('DbAddExample', () => {
     await sut.add(exampleInput)
     expect(addExampleRepositorySpy.input).toEqual(exampleInput)
   })
+
+  test('Should return example id on success', async() => {
+    const { sut, addExampleRepositorySpy } = makeSut()
+    const exampleInput = addExampleInput()
+    const exampleId = await sut.add(exampleInput)
+    expect(exampleId).toBe(addExampleRepositorySpy.output)
+  })
 })
