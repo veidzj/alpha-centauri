@@ -27,30 +27,34 @@ const mockRequest = (): AddExampleController.Request => ({
 })
 
 describe('AddExampleController', () => {
-  test('Should call Validation with correct values', async() => {
-    const { sut, validationSpy } = makeSut()
-    const request = mockRequest()
-    await sut.handle(request)
-    expect(validationSpy.input).toEqual(request)
+  describe('Validation', () => {
+    test('Should call Validation with correct values', async() => {
+      const { sut, validationSpy } = makeSut()
+      const request = mockRequest()
+      await sut.handle(request)
+      expect(validationSpy.input).toEqual(request)
+    })
   })
 
-  test('Should call AddExample with correct values', async() => {
-    const { sut, addExampleSpy } = makeSut()
-    const request = mockRequest()
-    await sut.handle(request)
-    expect(addExampleSpy.input).toEqual(request)
-  })
+  describe('AddExample', () => {
+    test('Should call AddExample with correct values', async() => {
+      const { sut, addExampleSpy } = makeSut()
+      const request = mockRequest()
+      await sut.handle(request)
+      expect(addExampleSpy.input).toEqual(request)
+    })
 
-  test('Should return status 201 with example id on success', async() => {
-    const { sut, addExampleSpy } = makeSut()
-    const response = await sut.handle(mockRequest())
-    expect(response).toEqual(created({ exampleId: addExampleSpy.output }))
-  })
+    test('Should return status 201 with example id on success', async() => {
+      const { sut, addExampleSpy } = makeSut()
+      const response = await sut.handle(mockRequest())
+      expect(response).toEqual(created({ exampleId: addExampleSpy.output }))
+    })
 
-  test('Should return status 500 if AddExample throws', async() => {
-    const { sut, addExampleSpy } = makeSut()
-    jest.spyOn(addExampleSpy, 'add').mockRejectedValueOnce(new Error())
-    const response = await sut.handle(mockRequest())
-    expect(response).toEqual(serverError())
+    test('Should return status 500 if AddExample throws', async() => {
+      const { sut, addExampleSpy } = makeSut()
+      jest.spyOn(addExampleSpy, 'add').mockRejectedValueOnce(new Error())
+      const response = await sut.handle(mockRequest())
+      expect(response).toEqual(serverError())
+    })
   })
 })
