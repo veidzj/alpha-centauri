@@ -41,7 +41,7 @@ describe('AddExampleController', () => {
     expect(addExampleSpy.input).toEqual(request)
   })
 
-  test('Should return status 201 with example id', async() => {
+  test('Should return status 201 with example id on success', async() => {
     const { sut, addExampleSpy } = makeSut()
     const response = await sut.handle(mockRequest())
     expect(response).toEqual(created({ exampleId: addExampleSpy.output }))
