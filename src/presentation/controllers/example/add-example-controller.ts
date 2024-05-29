@@ -1,6 +1,7 @@
 import { type Controller, type Validation, type HttpResponse } from '@/presentation/protocols'
-import { created, serverError } from '@/presentation/helpers'
+import { created, badRequest, serverError } from '@/presentation/helpers'
 import { type AddExample } from '@/domain/usecases/example'
+import { ValidationError } from '@/validation/errors'
 
 export class AddExampleController implements Controller {
   constructor(
@@ -14,6 +15,9 @@ export class AddExampleController implements Controller {
       const exampleId = await this.addExample.add(request)
       return created({ exampleId })
     } catch (error) {
+      if (error instanceof ValidationError) {
+        return badRequest(error)
+      }
       return serverError()
     }
   }
