@@ -3,7 +3,8 @@ import { faker } from '@faker-js/faker'
 import { AddExampleSpy } from '@/tests/domain/mocks/example'
 import { ValidationSpy } from '@/tests/presentation/mocks'
 import { AddExampleController } from '@/presentation/controllers/example'
-import { created, serverError } from '@/presentation/helpers'
+import { created, badRequest, serverError } from '@/presentation/helpers'
+import { ValidationError } from '@/validation/errors'
 
 interface Sut {
   sut: AddExampleController
@@ -33,6 +34,14 @@ describe('AddExampleController', () => {
       const request = mockRequest()
       await sut.handle(request)
       expect(validationSpy.input).toEqual(request)
+    })
+
+    test('Should return status 400 if Validation throws ValidationError', async() => {
+      const { sut, validationSpy } = makeSut()
+      const errorMessage = faker.word.words()
+      jest.spyOn(validationSpy, 'validate').mockImplementationOnce(() => { throw new ValidationError(errorMessage) })
+      const response = await sut.handle(mockRequest())
+      expect(response).toEqual(badRequest(new ValidationError(errorMessage)))
     })
   })
 
