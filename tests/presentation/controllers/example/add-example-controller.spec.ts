@@ -43,6 +43,13 @@ describe('AddExampleController', () => {
       const response = await sut.handle(mockRequest())
       expect(response).toEqual(badRequest(new ValidationError(errorMessage)))
     })
+
+    test('Should return status 500 if Validation throws', async() => {
+      const { sut, validationSpy } = makeSut()
+      jest.spyOn(validationSpy, 'validate').mockImplementationOnce(() => { throw new Error() })
+      const response = await sut.handle(mockRequest())
+      expect(response).toEqual(serverError())
+    })
   })
 
   describe('AddExample', () => {
