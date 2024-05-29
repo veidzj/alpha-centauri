@@ -1,7 +1,7 @@
 import { type Controller, type Validation, type HttpResponse } from '@/presentation/protocols'
 import { created, badRequest, serverError } from '@/presentation/helpers'
-import { type AddExample } from '@/domain/usecases/example'
 import { ValidationError } from '@/validation/errors'
+import { type AddExample } from '@/domain/usecases/example'
 
 export class AddExampleController implements Controller {
   constructor(
