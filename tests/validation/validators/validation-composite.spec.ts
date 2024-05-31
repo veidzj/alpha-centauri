@@ -23,9 +23,15 @@ describe('ValidationComposite', () => {
     const { sut, validationSpies } = makeSut()
     const errorMessage = faker.word.words()
     jest.spyOn(validationSpies[0], 'validate').mockImplementationOnce(() => { throw new ValidationError(errorMessage) })
-
     expect(() => {
       sut.validate({ field: faker.word.words() })
     }).toThrow(new ValidationError(errorMessage))
+  })
+
+  test('Should not throw on success', () => {
+    const { sut } = makeSut()
+    expect(() => {
+      sut.validate({ field: faker.word.words() })
+    }).not.toThrow()
   })
 })
