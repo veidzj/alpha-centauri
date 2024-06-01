@@ -17,6 +17,12 @@
         "@typescript-eslint/unbound-method": "off",
         "jest/unbound-method": "error"
       }
+    },
+    {
+      "files": "src/main/routes/**",
+      "rules": {
+        "@typescript-eslint/no-misused-promises": "off"
+      }
     }
   ],
   "ignorePatterns": ["*.config.ts"]
