@@ -4,5 +4,5 @@ import { adaptRoute } from '@/main/adapters'
 import { makeAddExampleController } from '@/main/factories/controllers/example'
 
 export default (router: Router): void => {
-  router.post('/example', adaptRoute(makeAddExampleController()))
+  router.post('/v1/example', adaptRoute(makeAddExampleController()))
 }
