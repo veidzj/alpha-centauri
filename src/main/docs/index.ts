@@ -16,6 +16,8 @@ export default {
     url: '/api'
   }],
   tags: [{
+    name: 'Health'
+  }, {
     name: 'Example'
   }],
   paths,
