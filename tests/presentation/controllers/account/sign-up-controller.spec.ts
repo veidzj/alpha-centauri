@@ -69,5 +69,12 @@ describe('SignUpController', () => {
       const response = await sut.handle(mockRequest())
       expect(response).toEqual(created({ accountId: addAccountSpy.output }))
     })
+
+    test('Should return status 500 if AddAccount throws', async() => {
+      const { sut, addAccountSpy } = makeSut()
+      jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(new Error())
+      const response = await sut.handle(mockRequest())
+      expect(response).toEqual(serverError())
+    })
   })
 })
