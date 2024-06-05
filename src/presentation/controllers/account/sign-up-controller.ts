@@ -1,5 +1,6 @@
 import { type Controller, type Validation, type HttpResponse } from '@/presentation/protocols'
-import { serverError } from '@/presentation/helpers'
+import { badRequest, serverError } from '@/presentation/helpers'
+import { ValidationError } from '@/validation/errors'
 
 export class SignUpController implements Controller {
   constructor(
@@ -7,8 +8,15 @@ export class SignUpController implements Controller {
   ) {}
 
   public async handle(request: SignUpController.Request): Promise<HttpResponse> {
-    this.validation.validate(request)
-    return serverError()
+    try {
+      this.validation.validate(request)
+      return serverError()
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        return badRequest(error)
+      }
+      return serverError()
+    }
   }
 }
 
