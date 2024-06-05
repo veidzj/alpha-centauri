@@ -3,7 +3,7 @@ import { faker } from '@faker-js/faker'
 import { ValidationSpy } from '@/tests/presentation/mocks'
 import { AddAccountSpy } from '@/tests/domain/mocks/account'
 import { SignUpController } from '@/presentation/controllers/account'
-import { badRequest, serverError } from '@/presentation/helpers'
+import { created, badRequest, serverError } from '@/presentation/helpers'
 import { ValidationError } from '@/validation/errors'
 
 interface Sut {
@@ -62,6 +62,12 @@ describe('SignUpController', () => {
       const request = mockRequest()
       await sut.handle(request)
       expect(addAccountSpy.input).toEqual(request)
+    })
+
+    test('Should return status 201 with account id on success', async() => {
+      const { sut, addAccountSpy } = makeSut()
+      const response = await sut.handle(mockRequest())
+      expect(response).toEqual(created({ accountId: addAccountSpy.output }))
     })
   })
 })
