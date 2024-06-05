@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 
 import { ValidationSpy } from '@/tests/presentation/mocks'
+import { AddAccountSpy } from '@/tests/domain/mocks/account'
 import { SignUpController } from '@/presentation/controllers/account'
 import { badRequest, serverError } from '@/presentation/helpers'
 import { ValidationError } from '@/validation/errors'
@@ -8,14 +9,17 @@ import { ValidationError } from '@/validation/errors'
 interface Sut {
   sut: SignUpController
   validationSpy: ValidationSpy
+  addAccountSpy: AddAccountSpy
 }
 
 const makeSut = (): Sut => {
   const validationSpy = new ValidationSpy()
-  const sut = new SignUpController(validationSpy)
+  const addAccountSpy = new AddAccountSpy()
+  const sut = new SignUpController(validationSpy, addAccountSpy)
   return {
     sut,
-    validationSpy
+    validationSpy,
+    addAccountSpy
   }
 }
 
@@ -49,6 +53,15 @@ describe('SignUpController', () => {
       jest.spyOn(validationSpy, 'validate').mockImplementationOnce(() => { throw new Error() })
       const response = await sut.handle(mockRequest())
       expect(response).toEqual(serverError())
+    })
+  })
+
+  describe('AddAccount', () => {
+    test('Should call AddAccount with correct values', async() => {
+      const { sut, addAccountSpy } = makeSut()
+      const request = mockRequest()
+      await sut.handle(request)
+      expect(addAccountSpy.input).toEqual(request)
     })
   })
 })
