@@ -3,8 +3,9 @@ import { faker } from '@faker-js/faker'
 import { ValidationSpy } from '@/tests/presentation/mocks'
 import { AddAccountSpy } from '@/tests/domain/mocks/account'
 import { SignUpController } from '@/presentation/controllers/account'
-import { created, badRequest, serverError } from '@/presentation/helpers'
+import { created, badRequest, serverError, conflict } from '@/presentation/helpers'
 import { ValidationError } from '@/validation/errors'
+import { AccountAlreadyExistsError } from '@/domain/errors/account'
 
 interface Sut {
   sut: SignUpController
@@ -68,6 +69,13 @@ describe('SignUpController', () => {
       const { sut, addAccountSpy } = makeSut()
       const response = await sut.handle(mockRequest())
       expect(response).toEqual(created({ accountId: addAccountSpy.output }))
+    })
+
+    test('Should return status 409 if AddAccount throws AccountAlreadyExistsError', async() => {
+      const { sut, addAccountSpy } = makeSut()
+      jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(new AccountAlreadyExistsError())
+      const response = await sut.handle(mockRequest())
+      expect(response).toEqual(conflict(new AccountAlreadyExistsError()))
     })
 
     test('Should return status 500 if AddAccount throws', async() => {
