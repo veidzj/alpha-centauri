@@ -1,7 +1,8 @@
 import { type Controller, type Validation, type HttpResponse } from '@/presentation/protocols'
-import { created, badRequest, serverError } from '@/presentation/helpers'
+import { created, badRequest, serverError, conflict } from '@/presentation/helpers'
 import { ValidationError } from '@/validation/errors'
 import { type AddAccount } from '@/domain/usecases/account'
+import { AccountAlreadyExistsError } from '@/domain/errors/account'
 
 export class SignUpController implements Controller {
   constructor(
@@ -17,6 +18,9 @@ export class SignUpController implements Controller {
     } catch (error) {
       if (error instanceof ValidationError) {
         return badRequest(error)
+      }
+      if (error instanceof AccountAlreadyExistsError) {
+        return conflict(error)
       }
       return serverError()
     }
