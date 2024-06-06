@@ -65,12 +65,6 @@ describe('SignUpController', () => {
       expect(addAccountSpy.input).toEqual(request)
     })
 
-    test('Should return status 201 with account id on success', async() => {
-      const { sut, addAccountSpy } = makeSut()
-      const response = await sut.handle(mockRequest())
-      expect(response).toEqual(created({ accountId: addAccountSpy.output }))
-    })
-
     test('Should return status 409 if AddAccount throws AccountAlreadyExistsError', async() => {
       const { sut, addAccountSpy } = makeSut()
       jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(new AccountAlreadyExistsError())
@@ -83,6 +77,12 @@ describe('SignUpController', () => {
       jest.spyOn(addAccountSpy, 'add').mockRejectedValueOnce(new Error())
       const response = await sut.handle(mockRequest())
       expect(response).toEqual(serverError())
+    })
+
+    test('Should return status 201 with account id on success', async() => {
+      const { sut, addAccountSpy } = makeSut()
+      const response = await sut.handle(mockRequest())
+      expect(response).toEqual(created({ accountId: addAccountSpy.output }))
     })
   })
 })
