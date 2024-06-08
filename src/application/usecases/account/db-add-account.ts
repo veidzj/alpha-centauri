@@ -1,4 +1,5 @@
-import { type CheckAccountByEmailRepository, type Hasher, type AddAccountRepository } from '@/application/protocols/account'
+import { type CheckAccountByEmailRepository, type AddAccountRepository } from '@/application/protocols/account'
+import { type Hasher } from '@/application/protocols/security'
 import { type AddAccount } from '@/domain/usecases/account'
 import { AccountAlreadyExistsError } from '@/domain/errors/account'
 

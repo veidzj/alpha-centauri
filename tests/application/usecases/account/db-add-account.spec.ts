@@ -1,4 +1,5 @@
-import { CheckAccountByEmailRepositorySpy, HasherSpy, AddAccountRepositorySpy } from '@/tests/application/mocks/account'
+import { CheckAccountByEmailRepositorySpy, AddAccountRepositorySpy } from '@/tests/application/mocks/account'
+import { HasherSpy } from '@/tests/application/mocks/security'
 import { mockAddAccountInput } from '@/tests/domain/mocks/account'
 import { DbAddAccount } from '@/application/usecases/account'
 import { AccountAlreadyExistsError } from '@/domain/errors/account'
