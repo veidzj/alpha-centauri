@@ -11,3 +11,14 @@ export class AddAccountRepositorySpy implements AddAccountRepository {
     return this.accountId
   }
 }
+
+export const mockAddAccountRepositoryInput = (): AddAccountRepository.Input => ({
+  username: faker.internet.userName(),
+  email: faker.internet.email(),
+  password: faker.internet.password(),
+  birthdate: faker.date.birthdate().toString(),
+  profileImage: faker.internet.url(),
+  isActive: faker.datatype.boolean(),
+  createdAt: faker.date.anytime(),
+  roles: [faker.word.words()]
+})
