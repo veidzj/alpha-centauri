@@ -1,6 +1,7 @@
 import { CheckAccountByEmailRepositorySpy } from '@/tests/application/mocks/account'
 import { mockAddAccountInput } from '@/tests/domain/mocks/account'
 import { DbAddAccount } from '@/application/usecases/account'
+import { AccountAlreadyExistsError } from '@/domain/errors/account'
 
 interface Sut {
   sut: DbAddAccount
@@ -30,6 +31,13 @@ describe('DbAddAccount', () => {
       jest.spyOn(checkAccountByEmailRepositorySpy, 'check').mockRejectedValueOnce(new Error())
       const promise = sut.add(mockAddAccountInput())
       await expect(promise).rejects.toThrow()
+    })
+
+    test('Should throw AccountAlreadyExistsError if CheckAccountByEmailRepository returns true', async() => {
+      const { sut, checkAccountByEmailRepositorySpy } = makeSut()
+      checkAccountByEmailRepositorySpy.output = true
+      const promise = sut.add(mockAddAccountInput())
+      await expect(promise).rejects.toThrow(new AccountAlreadyExistsError())
     })
   })
 })
