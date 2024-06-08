@@ -1,4 +1,4 @@
-import { CheckAccountByEmailRepositorySpy, HasherSpy } from '@/tests/application/mocks/account'
+import { CheckAccountByEmailRepositorySpy, HasherSpy, AddAccountRepositorySpy } from '@/tests/application/mocks/account'
 import { mockAddAccountInput } from '@/tests/domain/mocks/account'
 import { DbAddAccount } from '@/application/usecases/account'
 import { AccountAlreadyExistsError } from '@/domain/errors/account'
@@ -7,16 +7,19 @@ interface Sut {
   sut: DbAddAccount
   checkAccountByEmailRepositorySpy: CheckAccountByEmailRepositorySpy
   hasherSpy: HasherSpy
+  addAccountRepositorySpy: AddAccountRepositorySpy
 }
 
 const makeSut = (): Sut => {
   const checkAccountByEmailRepositorySpy = new CheckAccountByEmailRepositorySpy()
   const hasherSpy = new HasherSpy()
-  const sut = new DbAddAccount(checkAccountByEmailRepositorySpy, hasherSpy)
+  const addAccountRepositorySpy = new AddAccountRepositorySpy()
+  const sut = new DbAddAccount(checkAccountByEmailRepositorySpy, hasherSpy, addAccountRepositorySpy)
   return {
     sut,
     checkAccountByEmailRepositorySpy,
-    hasherSpy
+    hasherSpy,
+    addAccountRepositorySpy
   }
 }
 
@@ -57,6 +60,21 @@ describe('DbAddAccount', () => {
       jest.spyOn(hasherSpy, 'hash').mockRejectedValueOnce(new Error())
       const promise = sut.add(mockAddAccountInput())
       await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('AddAccountRepository', () => {
+    test('Should call AddAccountRepository with correct values', async() => {
+      const { sut, addAccountRepositorySpy, hasherSpy } = makeSut()
+      const addAccountInput = mockAddAccountInput()
+      await sut.add(addAccountInput)
+      expect(addAccountRepositorySpy.input).toEqual({
+        ...addAccountInput,
+        password: hasherSpy.digest,
+        isActive: true,
+        roles: ['user'],
+        createdAt: new Date()
+      })
     })
   })
 })
