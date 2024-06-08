@@ -1,11 +1,12 @@
-import { type CheckAccountByEmailRepository, type Hasher } from '@/application/protocols/account'
+import { type CheckAccountByEmailRepository, type Hasher, type AddAccountRepository } from '@/application/protocols/account'
 import { type AddAccount } from '@/domain/usecases/account'
 import { AccountAlreadyExistsError } from '@/domain/errors/account'
 
 export class DbAddAccount implements AddAccount {
   constructor(
     private readonly checkAccountByEmailRepository: CheckAccountByEmailRepository,
-    private readonly hasher: Hasher
+    private readonly hasher: Hasher,
+    private readonly addAccountRepository: AddAccountRepository
   ) {}
 
   public async add(input: AddAccount.Input): Promise<string> {
@@ -13,7 +14,14 @@ export class DbAddAccount implements AddAccount {
     if (accountAlreadyExists) {
       throw new AccountAlreadyExistsError()
     }
-    await this.hasher.hash(input.password)
+    const hashedPassword = await this.hasher.hash(input.password)
+    await this.addAccountRepository.add({
+      ...input,
+      password: hashedPassword,
+      isActive: true,
+      roles: ['user'],
+      createdAt: new Date()
+    })
     return ''
   }
 }
