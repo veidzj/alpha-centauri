@@ -1,4 +1,4 @@
-import { CheckAccountByEmailRepositorySpy } from '@/tests/application/mocks/account'
+import { CheckAccountByEmailRepositorySpy, HasherSpy } from '@/tests/application/mocks/account'
 import { mockAddAccountInput } from '@/tests/domain/mocks/account'
 import { DbAddAccount } from '@/application/usecases/account'
 import { AccountAlreadyExistsError } from '@/domain/errors/account'
@@ -6,14 +6,17 @@ import { AccountAlreadyExistsError } from '@/domain/errors/account'
 interface Sut {
   sut: DbAddAccount
   checkAccountByEmailRepositorySpy: CheckAccountByEmailRepositorySpy
+  hasherSpy: HasherSpy
 }
 
 const makeSut = (): Sut => {
   const checkAccountByEmailRepositorySpy = new CheckAccountByEmailRepositorySpy()
-  const sut = new DbAddAccount(checkAccountByEmailRepositorySpy)
+  const hasherSpy = new HasherSpy()
+  const sut = new DbAddAccount(checkAccountByEmailRepositorySpy, hasherSpy)
   return {
     sut,
-    checkAccountByEmailRepositorySpy
+    checkAccountByEmailRepositorySpy,
+    hasherSpy
   }
 }
 
@@ -38,6 +41,15 @@ describe('DbAddAccount', () => {
       checkAccountByEmailRepositorySpy.output = true
       const promise = sut.add(mockAddAccountInput())
       await expect(promise).rejects.toThrow(new AccountAlreadyExistsError())
+    })
+  })
+
+  describe('Hasher', () => {
+    test('Should call Hasher with correct password', async() => {
+      const { sut, hasherSpy } = makeSut()
+      const addAccountInput = mockAddAccountInput()
+      await sut.add(addAccountInput)
+      expect(hasherSpy.plainText).toBe(addAccountInput.password)
     })
   })
 })
