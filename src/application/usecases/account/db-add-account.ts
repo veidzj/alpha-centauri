@@ -15,13 +15,13 @@ export class DbAddAccount implements AddAccount {
       throw new AccountAlreadyExistsError()
     }
     const hashedPassword = await this.hasher.hash(input.password)
-    await this.addAccountRepository.add({
+    const accountId = await this.addAccountRepository.add({
       ...input,
       password: hashedPassword,
       isActive: true,
       roles: ['user'],
       createdAt: new Date()
     })
-    return ''
+    return accountId
   }
 }
