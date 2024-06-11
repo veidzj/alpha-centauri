@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 
 import { PasswordValidatorSpy } from '@/tests/validation/mocks'
 import { PasswordValidation } from '@/validation/validators/account'
+import { ValidationError } from '@/validation/errors'
 
 interface Sut {
   sut: PasswordValidation
@@ -25,5 +26,13 @@ describe('PasswordValidation', () => {
     const password = faker.internet.password()
     sut.validate({ [fieldName]: password })
     expect(passwordValidatorSpy.password).toBe(password)
+  })
+
+  test('Should throw ValidationError if PasswordValidator returns false', () => {
+    const { sut, passwordValidatorSpy } = makeSut()
+    passwordValidatorSpy.isPasswordStrong = false
+    expect(() => {
+      sut.validate({ [fieldName]: faker.internet.password() })
+    }).toThrow(new ValidationError(`${fieldName} must be a strong password`))
   })
 })
