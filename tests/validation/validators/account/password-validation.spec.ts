@@ -35,4 +35,12 @@ describe('PasswordValidation', () => {
       sut.validate({ [fieldName]: faker.internet.password() })
     }).toThrow(new ValidationError(`${fieldName} must be a strong password`))
   })
+
+  test('Should throw if PasswordValidator throws', () => {
+    const { sut, passwordValidatorSpy } = makeSut()
+    jest.spyOn(passwordValidatorSpy, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(() => {
+      sut.validate({ [fieldName]: faker.internet.password() })
+    }).toThrow()
+  })
 })
