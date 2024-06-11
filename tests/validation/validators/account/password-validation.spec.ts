@@ -43,4 +43,11 @@ describe('PasswordValidation', () => {
       sut.validate({ [fieldName]: faker.internet.password() })
     }).toThrow()
   })
+
+  test('Should not throw on success', () => {
+    const { sut } = makeSut()
+    expect(() => {
+      sut.validate({ [fieldName]: faker.internet.password() })
+    }).not.toThrow()
+  })
 })
