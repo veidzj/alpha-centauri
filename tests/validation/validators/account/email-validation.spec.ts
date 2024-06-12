@@ -35,4 +35,12 @@ describe('EmailValidation', () => {
       sut.validate({ [fieldName]: faker.internet.email() })
     }).toThrow(new ValidationError(`${fieldName} must be a valid email`))
   })
+
+  test('Should throw if EmailValidator throws', () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    jest.spyOn(emailValidatorSpy, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(() => {
+      sut.validate({ [fieldName]: faker.internet.email() })
+    }).toThrow()
+  })
 })
