@@ -14,6 +14,13 @@ export const badRequest = (data: object): HttpResponse => {
   }
 }
 
+export const conflict = (data: object): HttpResponse => {
+  return {
+    statusCode: 409,
+    body: data
+  }
+}
+
 export const serverError = (): HttpResponse => {
   return {
     statusCode: 500,
